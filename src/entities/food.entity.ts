@@ -15,31 +15,23 @@ import { FoodFeature } from "./food-feature.entity";
 import { FoodPrice } from "./food-price.entity";
 import { Photo } from "./photo.entity";
 import { Feature } from "./feature.entity";
-import * as Validator from "class-validator";
 
 @Index("fk_food_category_id", ["categoryId"], {})
-@Entity("food")
+@Entity("food", { schema: "public" })
 export class Food {
-  @PrimaryGeneratedColumn({ type: "int", name: "food_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "integer", name: "food_id" })
   foodId: number;
 
-  @Column({ type: "varchar", length: 255 })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(3, 255)
+  @Column("character varying", { name: "name", length: 255 })
   name: string;
 
-  @Column({ type: "int", name: "category_id", unsigned: true })
+  @Column({ type: "integer", name: "category_id", unsigned: true })
   categoryId: number;
 
-  @Column({ type: "text" })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(6, 10000)
+  @Column("text", { name: "description" })
   description: string;
 
-  @Column({
-    type: "timestamp", 
+  @Column("timestamp without time zone", {
     name: "created_at",
     default: () => "CURRENT_TIMESTAMP",
   })
@@ -48,10 +40,7 @@ export class Food {
   @OneToMany(() => CartFood, (cartFood) => cartFood.food)
   cartFoods: CartFood[];
 
-  @ManyToOne(() => Category, (category) => category.foods, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(() => Category, (category) => category.foods)
   @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
   category: Category;
 

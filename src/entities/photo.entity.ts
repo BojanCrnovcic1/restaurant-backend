@@ -7,28 +7,25 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Food } from "./food.entity";
-import * as Validator from "class-validator";
 
 @Index("fk_photo_food_id", ["foodId"], {})
 @Index("uq_photo_image_path", ["imagePath"], { unique: true })
-@Entity("photo")
+@Entity("photo", { schema: "public" })
 export class Photo {
-  @PrimaryGeneratedColumn({ type: "int", name: "photo_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "integer", name: "photo_id" })
   photoId: number;
 
-  @Column({ type: "int", name: "food_id", unsigned: true })
+  @Column({ type: "integer", name: "food_id", unsigned: true })
   foodId: number;
 
-  @Column({ type: "varchar", name: "image_path", unique: true, length: 128 })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(1, 128)
+  @Column("character varying", {
+    name: "image_path",
+    unique: true,
+    length: 128,
+  })
   imagePath: string;
 
-  @ManyToOne(() => Food, (food) => food.photos, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(() => Food, (food) => food.photos, { onDelete: "CASCADE" })
   @JoinColumn([{ name: "food_id", referencedColumnName: "foodId" }])
   food: Food;
 }

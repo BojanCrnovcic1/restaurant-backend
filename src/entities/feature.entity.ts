@@ -1,23 +1,20 @@
 import {
   Column,
   Entity,
+  Index,
   ManyToMany,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { FoodFeature } from "./food-feature.entity";
 import { Food } from "./food.entity";
-import * as Validator from "class-validator";
 
-@Entity("feature")
+@Entity("feature", { schema: "public" })
 export class Feature {
-  @PrimaryGeneratedColumn({ type: "int", name: "feature_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "integer", name: "feature_id" })
   featureId: number;
 
-  @Column({ type: "varchar", length: 128 })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(5, 128)
+  @Column("character varying", { name: "name", length: 128 })
   name: string;
 
   @OneToMany(() => FoodFeature, (foodFeature) => foodFeature.feature)

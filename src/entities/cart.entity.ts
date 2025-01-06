@@ -13,25 +13,21 @@ import { CartFood } from "./cart-food.entity";
 import { Order } from "./order.entity";
 
 @Index("fk_cart_user_id", ["userId"], {})
-@Entity("cart")
+@Entity("cart", { schema: "public" })
 export class Cart {
-  @PrimaryGeneratedColumn({ type: "int", name: "cart_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "integer", name: "cart_id" })
   cartId: number;
 
-  @Column({type: "int", name: "user_id", unsigned: true })
+  @Column({type: "integer", name: "user_id", unsigned: true })
   userId: number;
 
-  @Column({
-    type: "timestamp", 
+  @Column("timestamp without time zone", {
     name: "created_at",
     default: () => "CURRENT_TIMESTAMP",
   })
   createdAt: Date;
 
-  @ManyToOne(() => User, (user) => user.carts, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(() => User, (user) => user.carts)
   @JoinColumn([{ name: "user_id", referencedColumnName: "userId" }])
   user: User;
 

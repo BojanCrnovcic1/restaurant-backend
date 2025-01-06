@@ -7,39 +7,30 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Cart } from "./cart.entity";
-import * as Validator from "class-validator";
 
 @Index("uq_order_cart_id", ["cartId"], { unique: true })
-@Entity("order")
+@Entity("order", { schema: "public" })
 export class Order {
-  @PrimaryGeneratedColumn({ type: "int", name: "order_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "integer", name: "order_id" })
   orderId: number;
 
-  @Column({
-    type: "timestamp", 
+  @Column("timestamp without time zone", {
     name: "created_at",
     default: () => "CURRENT_TIMESTAMP",
   })
   createdAt: Date;
 
-  @Column({ type: "int", name: "cart_id", unique: true, unsigned: true })
+  @Column("integer", { name: "cart_id", unique: true })
   cartId: number;
 
-  @Column({
-    type: "enum",
-    enum: ["rejected", "accepted", "shipped", "pending"],
-    default: () => "'pending'"
+  @Column("text", {
+    name: "status",
+    nullable: true,
+    default: () => "'pending'",
   })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.IsIn(["rejected", "accepted", "shipped", "pending"])
-  status: "rejected" | "accepted" | "shipped" | "pending";
+  status: string | null;
 
-
-  @OneToOne(() => Cart, (cart) => cart.order, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
+  @OneToOne(() => Cart, (cart) => cart.order, { onDelete: "CASCADE" })
   @JoinColumn([{ name: "cart_id", referencedColumnName: "cartId" }])
   cart: Cart;
 }

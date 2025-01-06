@@ -1,12 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DatabaseConfig } from 'config/database.config';
 import { Administrator } from './entities/administrator.entity';
 import { CartFood } from './entities/cart-food.entity';
 import { Cart } from './entities/cart.entity';
 import { Category } from './entities/category.entity';
 import { Feature } from './entities/feature.entity';
+import { FoodFeature } from './entities/food-feature.entity';
 import { FoodPrice } from './entities/food-price.entity';
 import { Food } from './entities/food.entity';
 import { Order } from './entities/order.entity';
@@ -37,14 +37,14 @@ import { OrderMailer } from './services/order/order.mailer.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailConfig } from 'config/mail.config';
 import { OrderController } from './controllers/api/order.controller';
-import { FoodFeature } from './entities/food-feature.entity';
+import { DatabaseConfig } from 'config/database.config';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: DatabaseConfig.host,
-      port: 3306,
+      port: 5432,
       username: DatabaseConfig.username,
       password: DatabaseConfig.password,
       database: DatabaseConfig.database,
@@ -61,7 +61,11 @@ import { FoodFeature } from './entities/food-feature.entity';
         Photo,
         User
       ],
-      synchronize: false
+      synchronize: false,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+      autoLoadEntities: true,
     }),
     TypeOrmModule.forFeature([
       Administrator,

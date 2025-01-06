@@ -11,19 +11,15 @@ import { Food } from "./food.entity";
 
 @Index("fk_food_feature_food_id", ["foodId"], {})
 @Index("fk_food_feature_feature_id", ["featureId"], {})
-@Entity("food_feature")
+@Entity("food_feature", { schema: "public" })
 export class FoodFeature {
-  @PrimaryGeneratedColumn({
-    type: "int",
-    name: "food_feature_id",
-    unsigned: true,
-  })
+  @PrimaryGeneratedColumn({ type: "integer", name: "food_feature_id" })
   foodFeatureId: number;
 
-  @Column({ type: "int", name: "food_id", unsigned: true })
+  @Column({ type: "integer", name: "food_id", unsigned: true })
   foodId: number;
 
-  @Column({ type: "int", name: "feature_id", unsigned: true })
+  @Column({ type: "integer", name: "feature_id", unsigned: true })
   featureId: number;
 
   @ManyToOne(() => Feature, (feature) => feature.foodFeatures, {

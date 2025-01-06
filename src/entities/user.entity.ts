@@ -6,50 +6,34 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Cart } from "./cart.entity";
-import * as Validator from "class-validator";
 
 @Index("uq_user_email", ["email"], { unique: true })
 @Index("uq_user_phone_number", ["phoneNumber"], { unique: true })
-@Entity("user")
+@Entity("user", { schema: "public" })
 export class User {
-  @PrimaryGeneratedColumn({ type: "int", name: "user_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "integer", name: "user_id" })
   userId: number;
 
-  @Column({ type: "varchar", unique: true, length: 128 })
-  @Validator.IsNotEmpty()
-  @Validator.IsEmail({
-    allow_ip_domain: false,
-    allow_utf8_local_part: true,
-    require_tld: true
-  })
+  @Column("character varying", { name: "email", unique: true, length: 128 })
   email: string;
 
-  @Column({ type: "varchar", name: "password_hash", length: 128 })
-  @Validator.IsNotEmpty()
-  @Validator.IsHash('sha512') 
+  @Column("character varying", { name: "password_hash", length: 128 })
   passwordHash: string;
 
-  @Column({ type: "varchar", length: 64 })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(3, 64)
+  @Column("character varying", { name: "forename", length: 64 })
   forename: string;
 
-  @Column({ type: "varchar", length: 64 })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(3, 64)
+  @Column("character varying", { name: "surname", length: 64 })
   surname: string;
 
-  @Column({ type: "varchar", name: "phone_number", unique: true, length: 21 })
-  @Validator.IsNotEmpty()
-  @Validator.IsPhoneNumber(null)
+  @Column("character varying", {
+    name: "phone_number",
+    unique: true,
+    length: 21,
+  })
   phoneNumber: string;
 
-  @Column({ type: "text", name: "postal_address" })
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(10, 512)
+  @Column("text", { name: "postal_address" })
   postalAddress: string;
 
   @OneToMany(() => Cart, (cart) => cart.user)
