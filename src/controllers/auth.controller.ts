@@ -16,7 +16,6 @@ export class AuthController {
 
     @Post('/register')
     async registerUser(@Body() data: UserRegisterDto): Promise<User | ApiResponse> {
-      console.log('Data received on server:', data);
         return await this.userService.register(data);
     }
 
