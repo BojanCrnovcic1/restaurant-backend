@@ -4,5 +4,5 @@ export const DatabaseConfig = {
     password: 'pKO1g3aFjanSFF24',
     database: 'postgres',
 
-    port: 'https://restaurant-backend-79kk.onrender.com/'
+    port: 'https://restaurant-backend-79kk.onrender.com'
 }
